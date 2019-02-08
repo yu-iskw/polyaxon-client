@@ -355,7 +355,7 @@ class Experiment(BaseTracker):
             return None
 
     @classmethod
-    def get_tf_config(cls, envvar='TF_CONFIG'):
+    def get_tf_config(cls, envvar='TF_CONFIG', model_dir=None):
         """
         Returns the TF_CONFIG defining the cluster and the current task.
         if `envvar` is not null, it will set and env variable with `envvar`.
@@ -365,12 +365,16 @@ class Experiment(BaseTracker):
 
         ensure_in_custer()
 
+        if model_dir is None:
+            # Use the default path.
+            model_dir = get_outputs_path()
+
         cluster_def = cls.get_cluster_def()
         task_info = cls.get_task_info()
         tf_config = {
             'cluster': cluster_def,
             'task': task_info,
-            'model_dir': get_outputs_path(),
+            'model_dir': model_dir,
             'environment': 'cloud'
         }
 
